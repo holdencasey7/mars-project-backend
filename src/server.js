@@ -23,3 +23,6 @@ app.get("/api/images/links/:sol", api.getImagesLinksOnSol);
 
 /* Get Specific Image JSON on Sol From NASA Image API */
 app.get("/api/images/json/:sol/:num", api.getSpecificImageJsonOnSol);
+
+/* Get Specific Image Link on Sol From NASA Image API */
+app.get("/api/images/link/:sol/:num", api.getSpecificImageLinkOnSol);
