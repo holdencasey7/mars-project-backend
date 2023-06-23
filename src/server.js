@@ -15,5 +15,11 @@ app.get("/api/:name", api.API_Test);
 /* Get Weather Data from NASA */
 app.get("/api/weather/", api.getWeather);
 
-/* Get Image on Sol */
-app.get("/api/image/:sol", api.getImageOnSol);
+/* Get Images JSON on Sol */
+app.get("/api/images/json/:sol", api.getImagesJsonOnSol);
+
+/* Get Just Image Links on Sol From NASA Image API */
+app.get("/api/images/links/:sol", api.getImagesLinksOnSol);
+
+/* Get Specific Image JSON on Sol From NASA Image API */
+app.get("/api/images/json/:sol/:num", api.getSpecificImageJsonOnSol);
