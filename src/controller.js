@@ -33,18 +33,39 @@ export const getImagesJsonOnSol = async (req, res) => {
   console.log(`getImagesJsonOnSol :: Sol: ${sol}`);
 
   const response = await axios
+    // Use NASA API
     .get(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&api_key=${NASA_API_KEY}`
     )
+
     .then((resp) => {
       const imagesArray = resp.data.photos;
+
+      // Error if no images returned from NASA API
       if (!imagesArray || imagesArray === []) {
         console.error(`getImagesJsonOnSol :: No Such Images Exist`);
-        res.send([{}]);
+        const error = {
+          status: 404,
+          error: "Resource Not Found",
+          message: "No images available",
+        };
+        const response = {
+          image_json_array: [],
+          errors: [error],
+        };
+        res.send(response);
         return;
       }
-      res.send(imagesArray);
+
+      // Otherwise return image JSON array
+      const response = {
+        image_json_array: imagesArray,
+        errors: [],
+      };
+      res.send(response);
     })
+
+    // Handle other errors
     .catch((e) => {
       console.error(`getImagesJsonOnSol: ${e}`);
       res.send(`ERROR: getImagesJsonOnSol: ${e}`);
@@ -59,25 +80,46 @@ export const getImagesLinksOnSol = async (req, res) => {
   console.log(`getImagesLinksOnSol :: Sol: ${sol}`);
 
   const response = await axios
+    // Use NASA API
     .get(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&api_key=${NASA_API_KEY}`
     )
+
     .then((resp) => {
       const imagesArray = resp.data.photos;
+
+      // Error if no images returned from NASA API
       if (!imagesArray || imagesArray === []) {
         console.error(`getImagesLinksOnSol :: No Such Images Exist`);
-        res.send([""]);
+        const error = {
+          status: 404,
+          error: "Resource Not Found",
+          message: "No images available",
+        };
+        const response = {
+          image_link_array: [],
+          errors: [error],
+        };
+        res.send(response);
         return;
       }
+
+      // Otherwise return image links array
       const imagesLinksArray = [];
       for (let imageJsonObject of imagesArray) {
         imagesLinksArray.push(imageJsonObject.img_src);
       }
-      res.send(imagesLinksArray);
+      const response = {
+        image_link_array: imagesLinksArray,
+        errors: [],
+      };
+      res.send(response);
     })
+
+    // Handle other errors
     .catch((e) => {
       console.error(`getImagesLinksOnSol: ${e}`);
-      res.send(`ERROR: getImagesLinksOnSol: ${e}`);
+      throw new Error(e);
     });
 };
 
@@ -89,23 +131,44 @@ export const getSpecificImageJsonOnSol = async (req, res) => {
   console.log(`getSpecificImageJsonOnSol :: Sol: ${sol} || Num: ${num}`);
 
   const response = await axios
+    // Use NASA API
     .get(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&api_key=${NASA_API_KEY}`
     )
+
     .then((resp) => {
       const imagesArray = resp.data.photos;
       const imageJsonObject = imagesArray[num];
+
+      // Error if no image returned from NASA API
       if (!imageJsonObject) {
         console.error(`getSpecificImageJsonOnSol :: No Such Image Exists`);
-        res.send("");
+        const error = {
+          status: 404,
+          error: "Resource Not Found",
+          message: "No image available",
+        };
+        const response = {
+          image_json: {},
+          errors: [error],
+        };
+        res.send(response);
         return;
       }
-      res.send(imageJsonObject);
-      console.log(`getSpecificImageJsonOnSol :: Response: ${imagesArray[num]}`);
+
+      // Otherwise return image JSON
+      const response = {
+        image_json: imageJsonObject,
+        errors: [],
+      };
+      res.send(response);
+      console.log(`getSpecificImageJsonOnSol :: Response: ${response}`);
     })
+
+    // Handle other errors
     .catch((e) => {
       console.error(`getSpecificImageJsonOnSol: ${e}`);
-      res.send(`ERROR: getSpecificImageJsonOnSol: ${e}`);
+      throw new Error(e);
     });
 };
 
@@ -117,24 +180,43 @@ export const getSpecificImageLinkOnSol = async (req, res) => {
   console.log(`getSpecificImageLinkOnSol :: Sol: ${sol} || Num: ${num}`);
 
   const response = await axios
+    // Use NASA API
     .get(
       `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=${sol}&api_key=${NASA_API_KEY}`
     )
+
     .then((resp) => {
       const imagesArray = resp.data.photos;
       const imageJsonObject = imagesArray[num];
+
+      // Error if no image returned from NASA API
       if (!imageJsonObject) {
         console.error(`getSpecificImageLinkOnSol :: No Such Image Exists`);
-        res.send("");
+        const error = {
+          status: 404,
+          error: "Resource Not Found",
+          message: "No image available",
+        };
+        const response = {
+          image_link: "",
+          errors: [error],
+        };
+        res.send(response);
         return;
       }
-      res.send(imageJsonObject.img_src);
-      console.log(
-        `getSpecificImageLinkOnSol :: Response: ${imageJsonObject.img_src}`
-      );
+
+      // Otherwise return image link
+      const response = {
+        image_link: imageJsonObject.img_src,
+        errors: [],
+      };
+      res.send(response);
+      console.log(`getSpecificImageLinkOnSol :: Response: ${response}`);
     })
+
+    // Handle other errors
     .catch((e) => {
       console.error(`getSpecificImageLinkOnSol: ${e}`);
-      res.send(`ERROR: getSpecificImageLinkOnSol: ${e}`);
+      throw new Error(e);
     });
 };
