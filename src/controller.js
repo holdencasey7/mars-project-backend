@@ -63,6 +63,7 @@ export const getImagesJsonOnSol = async (req, res) => {
         errors: [],
       };
       res.send(response);
+      console.log(`getImagesJsonOnSol :: Response: ${response}`);
     })
 
     // Handle other errors
@@ -114,6 +115,7 @@ export const getImagesLinksOnSol = async (req, res) => {
         errors: [],
       };
       res.send(response);
+      console.log(`getImagesLinksOnSol :: Response: ${response}`);
     })
 
     // Handle other errors
