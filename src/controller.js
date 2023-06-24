@@ -21,7 +21,7 @@ export const getWeather = async (req, res) => {
     })
     .catch((e) => {
       console.error(`getWeather: ${e}`);
-      res.send(`ERROR: getWeather: ${e}`);
+      throw new Error(e);
     });
 };
 
@@ -68,7 +68,7 @@ export const getImagesJsonOnSol = async (req, res) => {
     // Handle other errors
     .catch((e) => {
       console.error(`getImagesJsonOnSol: ${e}`);
-      res.send(`ERROR: getImagesJsonOnSol: ${e}`);
+      throw new Error(e);
     });
 };
 
