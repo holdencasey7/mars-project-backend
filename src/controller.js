@@ -25,8 +25,8 @@ export const getWeather = async (req, res) => {
     });
 };
 
-/* Get Images JSON on Sol From NASA Image API */
-export const getImagesJsonOnSol = async (req, res) => {
+/* Get Curiosity Images JSON on Sol From NASA Image API */
+export const getCuriosityImagesJsonOnSol = async (req, res) => {
   console.log(`getImagesJsonOnSol :: Called`);
 
   const { sol } = req.params;
@@ -73,8 +73,84 @@ export const getImagesJsonOnSol = async (req, res) => {
     });
 };
 
-/* Get Just Image Links on Sol From NASA Image API */
-export const getImagesLinksOnSol = async (req, res) => {
+/* Get All Rovers Image JSON on Earth Date From NASA API */
+export const getAllImagesJsonOnEarthDate = async (req, res) => {
+  console.log(`getAllImagesJsonOnEarthDate :: Called`);
+
+  const { earthDate } = req.params;
+  console.log(`getAllImagesJsonOnEarthDate :: Earth Date: ${earthDate}`);
+
+  let imagesJsonArray = [];
+  let errors = [];
+
+  // Get Curiosity Images
+  const curiosityResponse = await axios
+    .get(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=${earthDate}&api_key=${NASA_API_KEY}`
+    )
+    .then((resp) => {
+      imagesJsonArray = [...imagesJsonArray, ...resp.data.photos];
+      console.log(
+        `getAllImagesJsonOnEarthDate :: Curiosity : Added ${resp.data.photos.length} images`
+      );
+    })
+    .catch((e) => {
+      console.error(`getAllImagesJsonOnEarthDate: ${e}`);
+      throw new Error(e);
+    });
+
+  // Get Opportunity Images
+  const opportunityResponse = await axios
+    .get(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos?earth_date=${earthDate}&api_key=${NASA_API_KEY}`
+    )
+    .then((resp) => {
+      imagesJsonArray = [...imagesJsonArray, ...resp.data.photos];
+      console.log(
+        `getAllImagesJsonOnEarthDate :: Opportunity : Added ${resp.data.photos.length} images`
+      );
+    })
+    .catch((e) => {
+      console.error(`getAllImagesJsonOnEarthDate: ${e}`);
+      throw new Error(e);
+    });
+
+  // Get Spirit Images
+  const spiritResponse = await axios
+    .get(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/spirit/photos?earth_date=${earthDate}&api_key=${NASA_API_KEY}`
+    )
+    .then((resp) => {
+      imagesJsonArray = [...imagesJsonArray, ...resp.data.photos];
+      console.log(
+        `getAllImagesJsonOnEarthDate :: Spirit : Added ${resp.data.photos.length} images`
+      );
+    })
+    .catch((e) => {
+      console.error(`getAllImagesJsonOnEarthDate: ${e}`);
+      throw new Error(e);
+    });
+
+  // Error if no images
+  if (imagesJsonArray.length <= 0) {
+    errors.push({
+      status: 404,
+      error: "Resource Not Found",
+      message: "No images available",
+    });
+  }
+
+  const response = {
+    image_json_array: imagesJsonArray,
+    errors: errors,
+  };
+
+  res.send(response);
+  console.log(`getAllImagesJsonOnEarthDate :: Finished`);
+};
+
+/* Get Curiosity Just Image Links on Sol From NASA Image API */
+export const getCuriosityImagesLinksOnSol = async (req, res) => {
   console.log(`getImagesLinksOnSol :: Called`);
 
   const { sol } = req.params;
@@ -125,8 +201,8 @@ export const getImagesLinksOnSol = async (req, res) => {
     });
 };
 
-/* Get Specific Image JSON on Sol From NASA Image API */
-export const getSpecificImageJsonOnSol = async (req, res) => {
+/* Get Curiosity Specific Image JSON on Sol From NASA Image API */
+export const getCuriositySpecificImageJsonOnSol = async (req, res) => {
   console.log(`getSpecificImageJsonOnSol :: Called`);
 
   const { sol, num } = req.params;
@@ -174,8 +250,8 @@ export const getSpecificImageJsonOnSol = async (req, res) => {
     });
 };
 
-/* Get Specific Image Link on Sol From NASA Image API */
-export const getSpecificImageLinkOnSol = async (req, res) => {
+/* Get Curiosity Specific Image Link on Sol From NASA Image API */
+export const getCuriositySpecificImageLinkOnSol = async (req, res) => {
   console.log(`getSpecificImageLinkOnSol :: Called`);
 
   const { sol, num } = req.params;
